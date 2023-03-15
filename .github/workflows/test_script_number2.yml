@@ -34,10 +34,10 @@ jobs:
       # Run the collection
       - name: Generate Newman CLI Reporter
         run: |
-          newman run scratchpay_qa.json -e env.json  --suppress-exit-code -r slackmsg --reporter-slackmsg-webhookurl 'https://hooks.slack.com/services/*******/*******/' --reporter-slackmsg-messageSize '50000000000' 
+          newman run number2/scratchpay_qa.json -e number2/env.json  --suppress-exit-code -r slackmsg --reporter-slackmsg-webhookurl 'https://hooks.slack.com/services/*******/*******/' --reporter-slackmsg-messageSize '50000000000' 
       - name: Generate HTML Report
         run: |
-          newman run scratchpay_qa.json -e env.json -r htmlextra -reporter-htmlextra-browserTitle "ScratchPay API Test Report" -r htmlextra --reporter-htmlextra-title "ScratchPay" --reporter-htmlextra-export testResults/api-testReport.html --reporter-htmlextra-darkTheme
+          newman run number2/scratchpay_qa.json -e number2/env.json -r htmlextra -reporter-htmlextra-browserTitle "ScratchPay API Test Report" -r htmlextra --reporter-htmlextra-title "ScratchPay" --reporter-htmlextra-export testResults/api-testReport.html --reporter-htmlextra-darkTheme
 
       # Run Newman Test in Console
       - name: Run Newman Test

@@ -1,4 +1,4 @@
-## QUESTION 1
+## NUMBER 1
 
 I decided to use **K6** for this test. In addition to all the test cases covered, it can also be further scaled to cater for performance tests.
 #### What is k6?
@@ -14,13 +14,13 @@ brew install k6
 // update the baseURL. Check your exposed port and update the baseURL in the test_script.js file
 
 // to run the script
-cd question1
+cd number1
 k6 run test_script.js
 
 ```
 
 Here is what it looks like 
-![Test Run](.github/files/question1.png)
+![Test Run](.github/files/number1.png)
 
 We can also update this test to run as a load test. 
 One option is to run this 
@@ -43,13 +43,13 @@ k6 run test_script.js
 ```
 
 
-## QUESTION 2
+## NUMBER 2
 
 For the API Tests, a popular API testing tool - **Postman** is used here. To automate the process, Newman was used. It is a command-line Collection Runner for Postman. It enables you to run and test a Postman Collection directly from the command line. It's built with extensibility in mind so that you can integrate it with your continuous integration (CI) servers and build systems.
 
 Running the code
 ```
-cd question2
+cd number2
 
 // Install dependencies
 npm install
@@ -62,7 +62,7 @@ npm run start-export
 ```
 
 Here is what it looks like: 
-![Test Run](.github/files/question2.png)
+![Test Run](.github/files/number2.png)
 
 ## EXTRAS
 - The CI/CD workflow using Github Actions are provided.
