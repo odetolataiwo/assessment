@@ -1,0 +1,67 @@
+name: API Tests
+on:
+  #push:
+  #pull_request:
+  schedule:
+  - cron: 0 08,12 * * 1-5
+
+jobs:
+  run-ci-test:
+    runs-on: ubuntu-latest
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      # Install Node on the runner
+      - name: Install Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: '16.x'
+
+      # Install the newman command line utility and also install the html extra reporter
+      - name: Install newman
+        run: |
+          npm install -g newman
+          npm install -g newman-reporter-slack
+          npm i -g newman-reporter-slackmsg
+          npm install -g newman-reporter-htmlextra
+          
+      # Make directory to upload the test results
+      - name: Make Directory for results
+        run: |
+          mkdir -p testResults
+          
+      # Run the collection
+      - name: Generate Newman CLI Reporter
+        run: |
+          newman run scratchpay_qa.json -e env.json  --suppress-exit-code -r slackmsg --reporter-slackmsg-webhookurl 'https://hooks.slack.com/services/*******/*******/' --reporter-slackmsg-messageSize '50000000000' 
+      - name: Generate HTML Report
+        run: |
+          newman run scratchpay_qa.json -e env.json -r htmlextra -reporter-htmlextra-browserTitle "ScratchPay API Test Report" -r htmlextra --reporter-htmlextra-title "ScratchPay" --reporter-htmlextra-export testResults/api-testReport.html --reporter-htmlextra-darkTheme
+
+      # Run Newman Test in Console
+      - name: Run Newman Test
+        run: |
+            newman run scratchpay_qa.json -e env.json
+      #Upload the contents of Test Results directory to workspace
+      - name: Output the run Details
+        uses: actions/upload-artifact@v2
+        with:
+         name: TestReports
+         path: testResults
+
+      - name: Report Status
+        if: always()
+        uses: ravsamhq/notify-slack-action@master
+        with:
+          status: ${{ job.status }}
+          notification_title: '{workflow} has {status_message}'
+          message_format: '{emoji} *{workflow} *{job} *{status_message} in <{repo_url}|{repo}>'
+          notify_when: 'failure,success'
+          footer: 'Linked Repo <{repo_url}|{repo}>'
+          mention_users: 'USER1_SLACKID,USER2_SLACKID,USER3_SLACKID'
+          mention_users_when: 'failure,warnings'
+
+
+env:
+  SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}

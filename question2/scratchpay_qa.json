@@ -1,0 +1,999 @@
+{
+	"info": {
+		"_postman_id": "0a47c555-50bc-4e56-bc1f-a0eddc96236a",
+		"name": "Scratch Pay",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "18526632"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Auth",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"",
+									"pm.environment.set(\"access_token\", jsonData.data.session.token);",
+									"",
+									"pm.test(\"Validations | Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Validations | Status is OK\", function () {",
+									"    pm.response.to.have.status(\"OK\");",
+									"});",
+									"",
+									"pm.test(\"Validations | isLoggedIn\", function () {",
+									"    pm.expect(jsonData.data.session.loggedIn).to.eql(true);",
+									"    pm.expect(jsonData.data.session.loggedIn).not.eql(false);",
+									"});",
+									"",
+									"pm.test(\"Validations | Credentials validated\", function () {",
+									"    pm.expect(jsonData.ok).to.eql(true);",
+									"    pm.expect(jsonData.ok).not.eql(null);",
+									"});",
+									"",
+									"pm.test(\"Validations | userID is present\", function () {",
+									"    pm.expect(jsonData.data.session.userId).to.eql(3);",
+									"    pm.expect(jsonData.data.session.userId).to.not.be.string;",
+									"});",
+									"",
+									"pm.test(\"Validations | Permissions not null\", function () {",
+									"   pm.expect(jsonData.data.permissions).not.eql(null);",
+									"",
+									"});",
+									"",
+									"pm.test(\"Validations | user authenticated\", function () {",
+									"   pm.expect(jsonData.data.auth).to.eql(true);",
+									"});",
+									"",
+									"pm.test(\"Validations | key is present\", function () {",
+									"   pm.expect(jsonData.data.session.key).not.eql(null);",
+									"});",
+									"",
+									"pm.test('Validation| Permissions is an Array', () => {",
+									"    pm.expect(jsonData.data.permissions).to.be.an('array').but.not.an('object')",
+									"});",
+									"",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"gianna@hightable.test\",\n    \"password\": \"thedantonio1\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Auth - Incorrect password",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"",
+									"",
+									"pm.test(\"Validations | Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"Validations | Unable to validate login credentials\", function () {",
+									"    pm.expect(jsonData.ok).to.eql(false);",
+									"    pm.expect(jsonData.ok).not.eql(null);",
+									"});",
+									"",
+									"pm.test(\"Validations | isLoggedIn not found\", function () {",
+									"    pm.expect(jsonData.data).to.not.have.property('isLoggedIn');",
+									"});",
+									"",
+									"pm.test(\"Validations | userID is not available\", function () {",
+									"    pm.expect(jsonData.data).to.not.have.property('userID');",
+									"});",
+									"",
+									"pm.test(\"Validations | Permissions are not granted\", function () {",
+									"    pm.expect(jsonData.data).to.not.have.property('Permissions');",
+									"});",
+									"",
+									"pm.test(\"Validations | Invalid credentials\", function () {",
+									"    pm.expect(jsonData.data.message).to.include('Invalid login credentials');",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"gianna@hightable.test\",\n    \"password\": \"1234567\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Auth - Incorrect email",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"",
+									"",
+									"pm.test(\"Validations | Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"Validations | Unable to validate login credentials\", function () {",
+									"    pm.expect(jsonData.ok).to.eql(false);",
+									"    pm.expect(jsonData.ok).not.eql(null);",
+									"});",
+									"",
+									"pm.test(\"Validations | isLoggedIn not found\", function () {",
+									"    pm.expect(jsonData.data).to.not.have.property('isLoggedIn');",
+									"});",
+									"",
+									"pm.test(\"Validations | userID is not available\", function () {",
+									"    pm.expect(jsonData.data).to.not.have.property('userID');",
+									"});",
+									"",
+									"pm.test(\"Validations | Permissions are not granted\", function () {",
+									"    pm.expect(jsonData.data).to.not.have.property('Permissions');",
+									"});",
+									"",
+									"pm.test(\"Validations | Invalid credentials\", function () {",
+									"    pm.expect(jsonData.data.message).to.include('Invalid login credentials');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"abc@google.test\",\n    \"password\": \"thedantonio1\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Search Clinics",
+			"item": [
+				{
+					"name": "Search Clinics - Veterinary",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"",
+									"pm.test(\"Validations | Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Validations | Credentials validated\", function () {",
+									"    pm.expect(jsonData.ok).to.eql(true);",
+									"    pm.expect(jsonData.ok).not.eql(null);",
+									"});",
+									"",
+									"pm.test(\"Validations | id is present\", function () {",
+									"    let Data = pm.response.json().data",
+									"    if(data.length>0){",
+									"    _.each(Data, (arrItem) => {",
+									"        pm.expect(arrItem.id).not.null",
+									"        pm.expect(arrItem.id).not.be.string",
+									"    })",
+									"    }",
+									"})",
+									"",
+									"pm.test(\"Validations | displayName is present\", function () {",
+									"    let Data = pm.response.json().data",
+									"    if(data.length>0){",
+									"    _.each(Data, (arrItem) => {",
+									"        pm.expect(arrItem.displayName).not.null",
+									"        pm.expect(arrItem.displayName).to.be.string",
+									"    })",
+									"    }",
+									"})",
+									"",
+									"pm.test(\"Validations | Body Contains Search Term\", function () {",
+									"",
+									"    response = jsonData.data",
+									"    if (response.length > 0) {",
+									"        response.forEach((x) => {",
+									"            pm.expect(x.displayName).to.include(pm.environment.get(\"searchTerm\"));",
+									"        })",
+									"    }",
+									"});",
+									"",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"searchTerm\", \"Veterinary\");"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/clinics?term={{searchTerm}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"clinics"
+							],
+							"query": [
+								{
+									"key": "term",
+									"value": "{{searchTerm}}"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get Clinics",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://qa-challenge-api.scratchpay.com/api/clinics?term=veterinary",
+									"protocol": "https",
+									"host": [
+										"qa-challenge-api",
+										"scratchpay",
+										"com"
+									],
+									"path": [
+										"api",
+										"clinics"
+									],
+									"query": [
+										{
+											"key": "term",
+											"value": "veterinary"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Tue, 14 Mar 2023 14:26:59 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "strict-transport-security",
+									"value": "max-age=15724800; includeSubDomains"
+								},
+								{
+									"key": "access-control-allow-headers",
+									"value": "Content-Type, Authorization"
+								},
+								{
+									"key": "access-control-allow-methods",
+									"value": "HEAD, GET, POST, PUT, PATCH, DELETE, OPTIONS, TRACE"
+								},
+								{
+									"key": "access-control-allow-origin",
+									"value": "*"
+								},
+								{
+									"key": "x-powered-by",
+									"value": "dashboard-core-redux"
+								},
+								{
+									"key": "CF-Cache-Status",
+									"value": "DYNAMIC"
+								},
+								{
+									"key": "Server",
+									"value": "cloudflare"
+								},
+								{
+									"key": "CF-RAY",
+									"value": "7a7d31deea7871b1-LHR"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"ok\": true,\n    \"data\": [\n        {\n            \"id\": 2,\n            \"displayName\": \"Continental Veterinary Clinic, Los Angeles, CA\"\n        },\n        {\n            \"id\": 7,\n            \"displayName\": \"Third Transfer Veterinary Clinic, Los Angeles, CA\"\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Search Clinics - Veterinary without auth",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"",
+									"pm.test(\"Validations | Status code is 401\", function () {",
+									"    pm.response.to.have.status(401);",
+									"});",
+									"",
+									"pm.test(\"Status is Unauthorized\", function () {",
+									"    pm.response.to.have.status(\"Unauthorized\");",
+									"});",
+									"",
+									"pm.test(\"Validations | user is Unauthorized\", function () {",
+									"    pm.expect(jsonData.ok).to.eql(false);",
+									"    pm.expect(jsonData.ok).not.eql(null);",
+									"});",
+									"",
+									"pm.test(\"Validations | Body does not contain Search Term\", function () {",
+									"",
+									"    response = jsonData.data",
+									"    if (response.length > 0) {",
+									"        response.forEach((x) => {",
+									"            pm.expect(x.displayName).to.not.include(pm.environment.get(\"searchTerm\"));",
+									"        })",
+									"    }",
+									"});",
+									"",
+									"pm.test(\"Validations | Unauthorized user\", function () {",
+									"    pm.expect(jsonData.data.message).to.include('You need to be authorized for this action.');",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"searchTerm\", \"Veterinary\");"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/clinics?term={{searchTerm}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"clinics"
+							],
+							"query": [
+								{
+									"key": "term",
+									"value": "{{searchTerm}}"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get Clinics",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://qa-challenge-api.scratchpay.com/api/clinics?term=veterinary",
+									"protocol": "https",
+									"host": [
+										"qa-challenge-api",
+										"scratchpay",
+										"com"
+									],
+									"path": [
+										"api",
+										"clinics"
+									],
+									"query": [
+										{
+											"key": "term",
+											"value": "veterinary"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Tue, 14 Mar 2023 14:26:59 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "strict-transport-security",
+									"value": "max-age=15724800; includeSubDomains"
+								},
+								{
+									"key": "access-control-allow-headers",
+									"value": "Content-Type, Authorization"
+								},
+								{
+									"key": "access-control-allow-methods",
+									"value": "HEAD, GET, POST, PUT, PATCH, DELETE, OPTIONS, TRACE"
+								},
+								{
+									"key": "access-control-allow-origin",
+									"value": "*"
+								},
+								{
+									"key": "x-powered-by",
+									"value": "dashboard-core-redux"
+								},
+								{
+									"key": "CF-Cache-Status",
+									"value": "DYNAMIC"
+								},
+								{
+									"key": "Server",
+									"value": "cloudflare"
+								},
+								{
+									"key": "CF-RAY",
+									"value": "7a7d31deea7871b1-LHR"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"ok\": true,\n    \"data\": [\n        {\n            \"id\": 2,\n            \"displayName\": \"Continental Veterinary Clinic, Los Angeles, CA\"\n        },\n        {\n            \"id\": 7,\n            \"displayName\": \"Third Transfer Veterinary Clinic, Los Angeles, CA\"\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Search Clinics - Dental",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"",
+									"pm.test(\"Validations | Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Validations | Body Contains Search Term\", function () {",
+									"",
+									"    response = jsonData.data",
+									"    if (response.length > 0) {",
+									"        response.forEach((x) => {",
+									"            pm.expect(x.displayName).to.include(pm.environment.get(\"searchTerm\"));",
+									"        })",
+									"    }",
+									"});",
+									"",
+									"pm.test(\"Validations | Credentials validated\", function () {",
+									"    pm.expect(jsonData.ok).to.eql(true);",
+									"    pm.expect(jsonData.ok).not.eql(null);",
+									"});",
+									"",
+									"pm.test(\"Validations | id is present\", function () {",
+									"    let Data = pm.response.json().data",
+									"    if(data.length>0){",
+									"    _.each(Data, (arrItem) => {",
+									"        pm.expect(arrItem.id).not.null",
+									"        pm.expect(arrItem.id).not.be.string",
+									"    })",
+									"    }",
+									"})",
+									"",
+									"pm.test(\"Validations | displayName is present\", function () {",
+									"    let Data = pm.response.json().data",
+									"    if(data.length>0){",
+									"    _.each(Data, (arrItem) => {",
+									"        pm.expect(arrItem.displayName).not.null",
+									"        pm.expect(arrItem.displayName).to.be.string",
+									"    })",
+									"    }",
+									"})",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"searchTerm\", \"Dental\");"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/clinics?term={{searchTerm}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"clinics"
+							],
+							"query": [
+								{
+									"key": "term",
+									"value": "{{searchTerm}}"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get Clinics",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://qa-challenge-api.scratchpay.com/api/clinics?term=veterinary",
+									"protocol": "https",
+									"host": [
+										"qa-challenge-api",
+										"scratchpay",
+										"com"
+									],
+									"path": [
+										"api",
+										"clinics"
+									],
+									"query": [
+										{
+											"key": "term",
+											"value": "veterinary"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Tue, 14 Mar 2023 14:26:59 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "strict-transport-security",
+									"value": "max-age=15724800; includeSubDomains"
+								},
+								{
+									"key": "access-control-allow-headers",
+									"value": "Content-Type, Authorization"
+								},
+								{
+									"key": "access-control-allow-methods",
+									"value": "HEAD, GET, POST, PUT, PATCH, DELETE, OPTIONS, TRACE"
+								},
+								{
+									"key": "access-control-allow-origin",
+									"value": "*"
+								},
+								{
+									"key": "x-powered-by",
+									"value": "dashboard-core-redux"
+								},
+								{
+									"key": "CF-Cache-Status",
+									"value": "DYNAMIC"
+								},
+								{
+									"key": "Server",
+									"value": "cloudflare"
+								},
+								{
+									"key": "CF-RAY",
+									"value": "7a7d31deea7871b1-LHR"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"ok\": true,\n    \"data\": [\n        {\n            \"id\": 2,\n            \"displayName\": \"Continental Veterinary Clinic, Los Angeles, CA\"\n        },\n        {\n            \"id\": 7,\n            \"displayName\": \"Third Transfer Veterinary Clinic, Los Angeles, CA\"\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Search Clinics - Eye",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"",
+									"pm.test(\"Validations | Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Validations | Body Contains Search Term\", function () {",
+									"",
+									"    response = jsonData.data",
+									"    if (response.length > 0) {",
+									"        response.forEach((x) => {",
+									"            pm.expect(x.displayName).to.include(pm.environment.get(\"searchTerm\"));",
+									"        })",
+									"    }",
+									"});",
+									"",
+									"pm.test(\"Validations | Credentials validated\", function () {",
+									"    pm.expect(jsonData.ok).to.eql(true);",
+									"    pm.expect(jsonData.ok).not.eql(null);",
+									"});",
+									"",
+									"pm.test(\"Validations | id is present\", function () {",
+									"    let Data = pm.response.json().data",
+									"    if(data.length>0){",
+									"    _.each(Data, (arrItem) => {",
+									"        pm.expect(arrItem.id).not.null",
+									"        pm.expect(arrItem.id).not.be.string",
+									"    })",
+									"    }",
+									"})",
+									"",
+									"pm.test(\"Validations | displayName is present\", function () {",
+									"    let Data = pm.response.json().data",
+									"    if(data.length>0){",
+									"    _.each(Data, (arrItem) => {",
+									"        pm.expect(arrItem.displayName).not.null",
+									"        pm.expect(arrItem.displayName).to.be.string",
+									"    })",
+									"    }",
+									"})",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"searchTerm\", \"Eye\");"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/clinics?term=Eye",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"clinics"
+							],
+							"query": [
+								{
+									"key": "term",
+									"value": "Eye"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get Clinics",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://qa-challenge-api.scratchpay.com/api/clinics?term=veterinary",
+									"protocol": "https",
+									"host": [
+										"qa-challenge-api",
+										"scratchpay",
+										"com"
+									],
+									"path": [
+										"api",
+										"clinics"
+									],
+									"query": [
+										{
+											"key": "term",
+											"value": "veterinary"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Tue, 14 Mar 2023 14:26:59 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "strict-transport-security",
+									"value": "max-age=15724800; includeSubDomains"
+								},
+								{
+									"key": "access-control-allow-headers",
+									"value": "Content-Type, Authorization"
+								},
+								{
+									"key": "access-control-allow-methods",
+									"value": "HEAD, GET, POST, PUT, PATCH, DELETE, OPTIONS, TRACE"
+								},
+								{
+									"key": "access-control-allow-origin",
+									"value": "*"
+								},
+								{
+									"key": "x-powered-by",
+									"value": "dashboard-core-redux"
+								},
+								{
+									"key": "CF-Cache-Status",
+									"value": "DYNAMIC"
+								},
+								{
+									"key": "Server",
+									"value": "cloudflare"
+								},
+								{
+									"key": "CF-RAY",
+									"value": "7a7d31deea7871b1-LHR"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"ok\": true,\n    \"data\": [\n        {\n            \"id\": 2,\n            \"displayName\": \"Continental Veterinary Clinic, Los Angeles, CA\"\n        },\n        {\n            \"id\": 7,\n            \"displayName\": \"Third Transfer Veterinary Clinic, Los Angeles, CA\"\n        }\n    ]\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Get Emails",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Validations | Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validations | Status = Bad Request\", function () {\r",
+									"    pm.response.to.have.status(\"Bad Request\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validations | credentials not valid for this action\", function () {\r",
+									"    pm.expect(jsonData.ok).to.eql(false);\r",
+									"    pm.expect(jsonData.ok).not.eql(null);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validations | User not permitted\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"User does not have permissions\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiZW1haWwiOiJnaWFubmFAaGlnaHRhYmxlLnRlc3QiLCJmaXJzdE5hbWUiOiJHaWFubmEiLCJsYXN0TmFtZSI6IkQnQW50b25pbyIsInN0YXR1cyI6ImFjdGl2ZSIsInJvbGUiOiJjbGluaWMiLCJpYXQiOjE2Nzg4MDM4MjAsImV4cCI6MTY3OTQwODYyMH0.hfjvQ5TBLbyVbvmELxP37allLOfdiuexj8Uwat_GLG0",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/clinics/2/emails",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"clinics",
+								"2",
+								"emails"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

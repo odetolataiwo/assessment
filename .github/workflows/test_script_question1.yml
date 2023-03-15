@@ -1,0 +1,23 @@
+name: K6 Scratchpay Tests
+
+on: 
+  push:
+  workflow_dispatch: # if you want this workflow to run when an action is performed on another repo
+
+jobs:
+  k6_load_test:
+    name: k6 Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Run local k6 test
+        uses: grafana/k6-action@v0.2.0
+        with:
+          filename: question1/test_script.js
+#          cloud: true
+#          token: ${{ secrets.K6_CLOUD_API_TOKEN }}
+        env:
+          BASE_URL: ${{ secrets.BASE_URL }}
